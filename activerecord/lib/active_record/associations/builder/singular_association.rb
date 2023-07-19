@@ -40,6 +40,18 @@ module ActiveRecord::Associations::Builder # :nodoc:
         def create_#{name}!(*args, &block)
           association(:#{name}).create!(*args, &block)
         end
+
+        def get_or_build(#{name}(*args, &block)
+          #{name} || build_#{name}(*args, &block)
+        end
+
+        def get_or_create_#{name}(*args, &block)
+          #{name} || create_#{name}(*args, &block)
+        end
+
+        def get_or_create_#{name}!(*args, &block)
+          #{name} || create_#{name}!(*args, &block)
+        end
       CODE
     end
 

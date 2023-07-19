@@ -349,6 +349,19 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     assert_equal apple, client.firm_with_primary_key
   end
 
+  def test_getting_or_creating_the_belonging_object
+    citibank = Account.create("credit_limit" => 10)
+    apple = citibank.get_or_create_firm("name" => "Apple")
+    assert_equal apple, citibank.firm
+  end
+
+  def test_getting_or_creating_the_belonging_existing_object
+    citibank = Account.create("credit_limit" => 10)
+    apple = citibank.build_firm("name" => "Apple")
+    still_apple = citibank.get_or_create("name" => "Not Apple")
+    assert_equal still_apple.name, apple.name
+  end
+
   def test_building_the_belonging_object
     citibank = Account.create("credit_limit" => 10)
     apple    = citibank.build_firm("name" => "Apple")
@@ -374,6 +387,20 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     _order_shop_id, order_id = order.id
     assert order_id
     assert_equal order_id, book.order_id
+  end
+
+  def test_getting_or_building_the_belonging_object
+    citibank = Account.create("credit_limit" => 10)
+    apple = citibank.get_or_build_firm("name" => "Apple")
+    citibank.save
+    assert_equal apple.id, citibank.firm_id
+  end
+
+  def test_getting_or_building_existing_belonging_object
+    citibank = Account.create("credit_limit" => 10)
+    apple = citibank.build_firm("name" => "Apple")
+    still_apple = citibank.get_or_build_firm("name" => "Not Apple")
+    assert_equal apple.name, still_apple.name
   end
 
   def test_should_set_composite_foreign_key_on_association_when_key_changes_on_associated_record
